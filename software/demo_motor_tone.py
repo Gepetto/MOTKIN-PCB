@@ -10,19 +10,33 @@ def parse_args():
         description="Make the motor emit a tone with square-wave Iq feedforward current."
     )
     parser.add_argument("--motor", choices=("0", "1", "both"), default="both")
-    parser.add_argument("--current", type=float, default=0.2, help="Iq_ff amplitude [A]")
-    parser.add_argument("--frequency", type=float, default=220.0, help="Tone frequency [Hz]")
+    parser.add_argument(
+        "--current", type=float, default=0.2, help="Iq_ff amplitude [A]"
+    )
+    parser.add_argument(
+        "--frequency", type=float, default=220.0, help="Tone frequency [Hz]"
+    )
     parser.add_argument("--seconds", type=float, default=0.5, help="Tone duration [s]")
-    parser.add_argument("--rate", type=float, default=2000.0, help="USB command rate [Hz]")
+    parser.add_argument(
+        "--rate", type=float, default=2000.0, help="USB command rate [Hz]"
+    )
     parser.add_argument("--timeout-ms", type=int, default=50)
     return parser.parse_args()
 
 
 def set_iq(robot, motor, iq):
-    robot.m0.set(kp=0.0, kd=0.0, iff=iq if motor in ("0", "both") else 0.0,
-                 enabled=motor in ("0", "both"))
-    robot.m1.set(kp=0.0, kd=0.0, iff=iq if motor in ("1", "both") else 0.0,
-                 enabled=motor in ("1", "both"))
+    robot.m0.set(
+        kp=0.0,
+        kd=0.0,
+        iff=iq if motor in ("0", "both") else 0.0,
+        enabled=motor in ("0", "both"),
+    )
+    robot.m1.set(
+        kp=0.0,
+        kd=0.0,
+        iff=iq if motor in ("1", "both") else 0.0,
+        enabled=motor in ("1", "both"),
+    )
 
 
 def main():

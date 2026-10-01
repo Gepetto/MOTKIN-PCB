@@ -136,8 +136,12 @@ def main():
     parser.add_argument("--startup-timeout", type=float, default=8.0)
     parser.add_argument("--motor", choices=("0", "1", "both"), default="both")
     parser.add_argument("--amplitude", type=float, default=0.2, help="Iq amplitude [A]")
-    parser.add_argument("--frequency", type=float, default=2.0, help="square-wave frequency [Hz]")
-    parser.add_argument("--rate", type=float, default=1000.0, help="USB command rate [Hz]")
+    parser.add_argument(
+        "--frequency", type=float, default=2.0, help="square-wave frequency [Hz]"
+    )
+    parser.add_argument(
+        "--rate", type=float, default=1000.0, help="USB command rate [Hz]"
+    )
     parser.add_argument("--timeout-ms", type=int, default=50)
     parser.add_argument("--save", help="optional output image path")
     args = parser.parse_args()

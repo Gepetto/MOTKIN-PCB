@@ -33,15 +33,19 @@ def require_ready(state, motors=BOTH_MOTORS):
         cause = FAULT_CAUSES.get(flags >> 3, "unknown fault code")
         recovery = (
             "Release the button, then hold it again: recovery occurs at 3 seconds. Restart the controller to resume."
-            if flags >> 3 == 9 else "Correct the cause and reset the board."
+            if flags >> 3 == 9
+            else "Correct the cause and reset the board."
         )
         raise RuntimeError(
-            f"Controller fault: {cause} (flags=0x{flags:02x}). "
-            f"{recovery}"
+            f"Controller fault: {cause} (flags=0x{flags:02x}). {recovery}"
         )
     missing = motors & BOTH_MOTORS & ~flags
     if missing:
-        names = ", ".join(name for mask, name in ((M0_READY, "M0"), (M1_READY, "M1")) if missing & mask)
+        names = ", ".join(
+            name
+            for mask, name in ((M0_READY, "M0"), (M1_READY, "M1"))
+            if missing & mask
+        )
         raise RuntimeError(
             f"Motors not ready: {names} (flags=0x{flags:02x}). "
             "Check saved calibration and startup hardware checks."

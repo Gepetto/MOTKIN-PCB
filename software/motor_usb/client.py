@@ -110,10 +110,15 @@ class MotorUsbController:
                 # Cleanup must still work after a latched runtime error.
                 self.m0.set(kp=0.0, kd=0.0, iff=0.0, enabled=False)
                 self.m1.set(kp=0.0, kd=0.0, iff=0.0, enabled=False)
-                self._serial.write(encode_command(
-                    self.command_index, 0, 0,
-                    self.m0.packet_values(), self.m1.packet_values(),
-                ))
+                self._serial.write(
+                    encode_command(
+                        self.command_index,
+                        0,
+                        0,
+                        self.m0.packet_values(),
+                        self.m1.packet_values(),
+                    )
+                )
             finally:
                 self._rx_running = False
                 if self._rx_thread is not None:
@@ -217,7 +222,9 @@ class MotorUsbController:
             while True:
                 state = self.poll()
                 sequence = state.get("sequence")
-                if state and (previous_sequence is None or sequence != previous_sequence):
+                if state and (
+                    previous_sequence is None or sequence != previous_sequence
+                ):
                     return state
                 remaining = deadline - time.monotonic()
                 if remaining <= 0.0:

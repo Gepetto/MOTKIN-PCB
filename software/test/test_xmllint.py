@@ -20,4 +20,4 @@ import pytest
 @pytest.mark.xmllint
 def test_xmllint() -> None:
     rc = main(argv=[])
-    assert rc == 0, 'Found code style errors / warnings'
+    assert rc == 0, "Found code style errors / warnings"
