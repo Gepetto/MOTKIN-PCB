@@ -97,7 +97,7 @@ class MotorUsbController:
     def open(self):
         import serial
 
-        self._serial = serial.Serial(self.port, self.baud, timeout=0.001)
+        self._serial = serial.Serial(str(self.port), self.baud, timeout=0.001)
         self._serial.reset_input_buffer()
         self._rx_running = True
         self._rx_thread = Thread(target=self._read_loop, daemon=True)
@@ -223,7 +223,8 @@ class MotorUsbController:
                 if remaining <= 0.0:
                     break
                 self._condition.wait(remaining)
-        raise TimeoutError(f"Command {command_index} was not echoed by core1")
+        msg = f"Command {command_index} was not echoed by core1"
+        raise TimeoutError(msg)
 
     def wait_for_state(self, previous_sequence=None, timeout_s=0.05):
         deadline = time.monotonic() + timeout_s
@@ -239,7 +240,8 @@ class MotorUsbController:
                 if remaining <= 0.0:
                     break
                 self._condition.wait(remaining)
-        raise TimeoutError("No new state packet received")
+        msg = "No new state packet received"
+        raise TimeoutError(msg)
 
     def _read_loop(self):
         while self._rx_running:
