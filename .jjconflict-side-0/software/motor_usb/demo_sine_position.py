@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+import math
+import time
+
+from motor_usb import MotorUsbController
+
+
+def main(amplitude=3.0, frequency=5):
+    with MotorUsbController(timeout_ms=20) as robot:
+        robot.initialize()
+        q0, q1 = robot.m0.q, robot.m1.q
+        t0 = time.monotonic()
+        while time.monotonic() - t0 < 10.0:
+            t = time.monotonic() - t0
+            q = amplitude * math.sin(2.0 * math.pi * frequency * t)
+            v = (
+                amplitude
+                * 2.0
+                * math.pi
+                * frequency
+                * math.cos(2.0 * math.pi * frequency * t)
+            )
+            robot.m0.set(q=q0 + q, v=v, kp=1.0, kd=0.03)
+            robot.m1.set(q=q1 + q, v=v, kp=1.0, kd=0.03)
+            robot.update()
+
+
+if __name__ == "__main__":
+    main()
