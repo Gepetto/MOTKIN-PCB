@@ -1,6 +1,0 @@
-Run host regression tests with:
-
-    python3 test/run_host_tests.py
-
-Requires Python 3, pyserial and g++. Tests use a temporary build directory and never access a board.
-See ../README.md for hardware validation that remains necessary.

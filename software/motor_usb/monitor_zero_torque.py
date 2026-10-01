@@ -4,7 +4,6 @@ import time
 
 from motor_usb import MotorUsbController
 
-
 RATE_HZ = 50.0
 PERIOD_S = 1.0 / RATE_HZ
 TIMEOUT_MS = 100

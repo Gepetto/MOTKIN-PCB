@@ -13,7 +13,6 @@ from .protocol import (
     require_ready,
 )
 
-
 DEFAULT_MAX_COMMAND_RATE_HZ = 2000.0
 
 
@@ -117,7 +116,7 @@ class MotorUsbController:
                         0,
                         self.m0.packet_values(),
                         self.m1.packet_values(),
-                    )
+                    ),
                 )
             finally:
                 self._rx_running = False
@@ -134,10 +133,20 @@ class MotorUsbController:
 
     def initialize(self, timeout_s=2.0, flags=BOTH_MOTORS):
         self.m0.set(
-            q=0.0, v=0.0, kp=0.0, kd=0.0, iff=0.0, enabled=bool(flags & M0_READY)
+            q=0.0,
+            v=0.0,
+            kp=0.0,
+            kd=0.0,
+            iff=0.0,
+            enabled=bool(flags & M0_READY),
         )
         self.m1.set(
-            q=0.0, v=0.0, kp=0.0, kd=0.0, iff=0.0, enabled=bool(flags & M1_READY)
+            q=0.0,
+            v=0.0,
+            kp=0.0,
+            kd=0.0,
+            iff=0.0,
+            enabled=bool(flags & M1_READY),
         )
         state = self.update(timeout_ms=0, block=True, timeout_s=timeout_s)
         require_ready(state, flags)

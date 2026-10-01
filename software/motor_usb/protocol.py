@@ -1,7 +1,6 @@
 import glob
 import struct
 
-
 MAGIC0 = 0xA5
 MAGIC1 = 0x5A
 MAGIC = bytes((MAGIC0, MAGIC1))
@@ -37,7 +36,7 @@ def require_ready(state, motors=BOTH_MOTORS):
             else "Correct the cause and reset the board."
         )
         raise RuntimeError(
-            f"Controller fault: {cause} (flags=0x{flags:02x}). {recovery}"
+            msg,
         )
     missing = motors & BOTH_MOTORS & ~flags
     if missing:
@@ -49,6 +48,9 @@ def require_ready(state, motors=BOTH_MOTORS):
         raise RuntimeError(
             f"Motors not ready: {names} (flags=0x{flags:02x}). "
             "Check saved calibration and startup hardware checks."
+        )
+        raise RuntimeError(
+            msg,
         )
 
 
@@ -72,7 +74,7 @@ def default_port():
     ports = sorted(
         glob.glob("/dev/serial/by-id/*")
         + glob.glob("/dev/ttyACM*")
-        + glob.glob("/dev/ttyUSB*")
+        + glob.glob("/dev/ttyUSB*"),
     )
     if not ports:
         raise SystemExit("No serial port found. Pass --port /dev/ttyACM0")
