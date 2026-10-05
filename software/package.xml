@@ -2,12 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>motkin_pcb</name>
-  <version>0.0.0</version>
+  <version>1.0.0</version>
   <description>usb driver for pico_dual_PMSM_BU79100G_DRV8316C</description>
   <maintainer email="guilhem.saurel@laas.fr">Guilhem Saurel</maintainer>
   <license>BSD-2-Clause</license>
 
   <author email="thomas.flayols@laas.fr">Thomas Flayols</author>
+
+  <url type="repository">https://github.com/Gepetto/MOTKIN-PCB</url>
 
   <depend>python3-matplotlib</depend>
   <depend>python3-serial</depend>
