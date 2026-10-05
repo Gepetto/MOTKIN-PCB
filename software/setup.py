@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = "pico_dual_pmsm_bu79100g_drv8316c"
+package_name = "motkin_pcb"
 
 setup(
     name=package_name,
@@ -11,7 +11,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
     ],
     package_data={"": ["py.typed"]},
-    install_requires=["setuptools"],
+    install_requires=["matplotlib", "pyserial", "setuptools"],
     zip_safe=True,
     author="Thomas Flayols",
     author_email="thomas.flayols@laas.fr",
@@ -26,12 +26,12 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "demo_motor_coupling = motor_usb.demo_motor_coupling:main",
-            "demo_motor_tone = motor_usb.demo_motor_tone:main",
-            "demo_sine_position = motor_usb.demo_sine_position:main",
-            "measure_host_timing = motor_usb.measure_host_timing:main",
-            "monitor_zero_torque = motor_usb.monitor_zero_torque:main",
-            "plot_current_step_response = motor_usb.plot_current_step_response:main",
+            "demo_motor_coupling = motkin_pcb.demo_motor_coupling:main",
+            "demo_motor_tone = motkin_pcb.demo_motor_tone:main",
+            "demo_sine_position = motkin_pcb.demo_sine_position:main",
+            "measure_host_timing = motkin_pcb.measure_host_timing:main",
+            "monitor_zero_torque = motkin_pcb.monitor_zero_torque:main",
+            "plot_current_step_response = motkin_pcb.plot_current_step_response:main",
         ],
     },
 )

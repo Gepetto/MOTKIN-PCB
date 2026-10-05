@@ -3,7 +3,7 @@ import argparse
 import statistics
 import time
 
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 
 
 def stats(values):

@@ -2,7 +2,7 @@
 import sys
 import time
 
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 
 RATE_HZ = 50.0
 PERIOD_S = 1.0 / RATE_HZ

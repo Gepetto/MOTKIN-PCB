@@ -2,7 +2,7 @@
 import math
 import time
 
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 
 
 def main(amplitude=3.0, frequency=5):

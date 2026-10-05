@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>pico_dual_pmsm_bu79100g_drv8316c</name>
+  <name>motkin_pcb</name>
   <version>0.0.0</version>
   <description>usb driver for pico_dual_PMSM_BU79100G_DRV8316C</description>
   <maintainer email="guilhem.saurel@laas.fr">Guilhem Saurel</maintainer>
