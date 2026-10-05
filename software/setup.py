@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = "motkin_pcb"
+package_name = "motkin-pcb"
 
 setup(
     name=package_name,
