@@ -2,7 +2,7 @@
 import argparse
 import time
 
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 
 
 def parse_args():

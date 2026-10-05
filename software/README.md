@@ -19,7 +19,7 @@ All demos and tools are in this directory. The shared library is a local package
 
 ```text
 software/
-    motor_usb/
+    motkin_pcb/
         __init__.py
         client.py
         protocol.py
@@ -43,7 +43,7 @@ software/
 Place new controller scripts here and import the client with:
 
 ```python
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 ```
 
 The client checks readiness and faults automatically in `initialize()` and

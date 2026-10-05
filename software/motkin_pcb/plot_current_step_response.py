@@ -4,8 +4,8 @@ import time
 
 import matplotlib.pyplot as plt
 
-from motor_usb import MotorUsbController
-from motor_usb.protocol import STATE_VALUE_NAMES, default_port
+from motkin_pcb import MotorUsbController
+from motkin_pcb.protocol import STATE_VALUE_NAMES, default_port
 
 SERIES = (
     *STATE_VALUE_NAMES,

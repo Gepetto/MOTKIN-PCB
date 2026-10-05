@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from motor_usb import MotorUsbController
+from motkin_pcb import MotorUsbController
 
 KP = 1.0
 KD = 0.03
