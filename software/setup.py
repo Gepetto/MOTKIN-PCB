@@ -11,7 +11,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
     ],
     package_data={"": ["py.typed"]},
-    install_requires=["setuptools"],
+    install_requires=["matplotlib", "pyserial", "setuptools"],
     zip_safe=True,
     author="Thomas Flayols",
     author_email="thomas.flayols@laas.fr",
