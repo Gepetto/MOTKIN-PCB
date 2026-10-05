@@ -16,12 +16,18 @@ def stats(values):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Measure PC-side USB control loop timing.")
+    parser = argparse.ArgumentParser(
+        description="Measure PC-side USB control loop timing.",
+    )
     parser.add_argument("--seconds", type=float, default=5.0)
     parser.add_argument("--rate", type=float, default=1000.0)
     parser.add_argument("--timeout-ms", type=int, default=20)
     parser.add_argument("--port", default=None)
-    parser.add_argument("--block", action="store_true", help="wait for echo after each command")
+    parser.add_argument(
+        "--block",
+        action="store_true",
+        help="wait for echo after each command",
+    )
     parser.add_argument(
         "--max-command-rate",
         type=float,

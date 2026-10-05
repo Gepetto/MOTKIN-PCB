@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from motor_usb import MotorUsbController
 from motor_usb.protocol import STATE_VALUE_NAMES, default_port
 
-
-SERIES = STATE_VALUE_NAMES + (
+SERIES = (
+    *STATE_VALUE_NAMES,
     "m0_i_cmd",
     "m1_i_cmd",
     "control_loop_us",
@@ -89,14 +89,16 @@ def capture_square_wave(
     return times, data, dropped
 
 
-def plot(times, data, port, save_path, motor, amplitude, frequency):
+def plot(times, data, port, save_path, selected_motor, amplitude, frequency):
     fig, axes = plt.subplots(4, 2, sharex=True, figsize=(12, 10))
     fig.suptitle(
         f"Current loop square-wave test from {port}: "
-        f"motor={motor}, amplitude={amplitude:.3f} A, frequency={frequency:.2f} Hz"
+        f"motor={selected_motor}, amplitude={amplitude:.3f} A, frequency={frequency:.2f} Hz",
     )
 
     for col, motor in enumerate(("m0", "m1")):
+        if selected_motor != "both" and motor != f"m{selected_motor}":
+            continue
         axes[0, col].set_title("Motor 0" if motor == "m0" else "Motor 1")
         axes[0, col].plot(times, data[f"{motor}_i"], label="Iq")
         axes[0, col].plot(times, data[f"{motor}_i_target"], label="Iq target")
@@ -128,7 +130,7 @@ def plot(times, data, port, save_path, motor, amplitude, frequency):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Command a small square-wave Iq target and plot current-loop response."
+        description="Command a small square-wave Iq target and plot current-loop response.",
     )
     parser.add_argument("seconds", type=float, help="capture duration")
     parser.add_argument("--port", default=None, help="serial port, e.g. /dev/ttyACM0")
@@ -136,24 +138,38 @@ def main():
     parser.add_argument("--startup-timeout", type=float, default=8.0)
     parser.add_argument("--motor", choices=("0", "1", "both"), default="both")
     parser.add_argument("--amplitude", type=float, default=0.2, help="Iq amplitude [A]")
-    parser.add_argument("--frequency", type=float, default=2.0, help="square-wave frequency [Hz]")
-    parser.add_argument("--rate", type=float, default=1000.0, help="USB command rate [Hz]")
+    parser.add_argument(
+        "--frequency",
+        type=float,
+        default=2.0,
+        help="square-wave frequency [Hz]",
+    )
+    parser.add_argument(
+        "--rate",
+        type=float,
+        default=1000.0,
+        help="USB command rate [Hz]",
+    )
     parser.add_argument("--timeout-ms", type=int, default=50)
     parser.add_argument("--save", help="optional output image path")
     args = parser.parse_args()
     if args.seconds <= 0.0:
-        raise SystemExit("seconds must be > 0")
+        msg = "seconds must be > 0"
+        raise SystemExit(msg)
     if args.amplitude <= 0.0:
-        raise SystemExit("--amplitude must be > 0")
+        msg = "--amplitude must be > 0"
+        raise SystemExit(msg)
     if args.frequency <= 0.0:
-        raise SystemExit("--frequency must be > 0")
+        msg = "--frequency must be > 0"
+        raise SystemExit(msg)
     if args.rate <= 0.0:
-        raise SystemExit("--rate must be > 0")
+        msg = "--rate must be > 0"
+        raise SystemExit(msg)
 
     port = args.port or default_port()
     print(
         f"Commanding {args.amplitude:.3f} A square-wave Iq at {args.frequency:.2f} Hz "
-        f"on motor {args.motor} for {args.seconds:.2f} s from {port}"
+        f"on motor {args.motor} for {args.seconds:.2f} s from {port}",
     )
     times, data, dropped = capture_square_wave(
         port,
@@ -167,7 +183,8 @@ def main():
         args.timeout_ms,
     )
     if not times:
-        raise SystemExit("No valid state packets captured.")
+        msg = "No valid state packets captured."
+        raise SystemExit(msg)
 
     print(f"Captured {len(times)} samples, dropped_by_sequence={dropped}")
     plot(times, data, port, args.save, args.motor, args.amplitude, args.frequency)

@@ -13,7 +13,6 @@ from .protocol import (
     require_ready,
 )
 
-
 DEFAULT_MAX_COMMAND_RATE_HZ = 2000.0
 
 
@@ -98,7 +97,7 @@ class MotorUsbController:
     def open(self):
         import serial
 
-        self._serial = serial.Serial(self.port, self.baud, timeout=0.001)
+        self._serial = serial.Serial(str(self.port), self.baud, timeout=0.001)
         self._serial.reset_input_buffer()
         self._rx_running = True
         self._rx_thread = Thread(target=self._read_loop, daemon=True)
@@ -110,10 +109,15 @@ class MotorUsbController:
                 # Cleanup must still work after a latched runtime error.
                 self.m0.set(kp=0.0, kd=0.0, iff=0.0, enabled=False)
                 self.m1.set(kp=0.0, kd=0.0, iff=0.0, enabled=False)
-                self._serial.write(encode_command(
-                    self.command_index, 0, 0,
-                    self.m0.packet_values(), self.m1.packet_values(),
-                ))
+                self._serial.write(
+                    encode_command(
+                        self.command_index,
+                        0,
+                        0,
+                        self.m0.packet_values(),
+                        self.m1.packet_values(),
+                    ),
+                )
             finally:
                 self._rx_running = False
                 if self._rx_thread is not None:
@@ -129,10 +133,20 @@ class MotorUsbController:
 
     def initialize(self, timeout_s=2.0, flags=BOTH_MOTORS):
         self.m0.set(
-            q=0.0, v=0.0, kp=0.0, kd=0.0, iff=0.0, enabled=bool(flags & M0_READY)
+            q=0.0,
+            v=0.0,
+            kp=0.0,
+            kd=0.0,
+            iff=0.0,
+            enabled=bool(flags & M0_READY),
         )
         self.m1.set(
-            q=0.0, v=0.0, kp=0.0, kd=0.0, iff=0.0, enabled=bool(flags & M1_READY)
+            q=0.0,
+            v=0.0,
+            kp=0.0,
+            kd=0.0,
+            iff=0.0,
+            enabled=bool(flags & M1_READY),
         )
         state = self.update(timeout_ms=0, block=True, timeout_s=timeout_s)
         require_ready(state, flags)
@@ -209,7 +223,8 @@ class MotorUsbController:
                 if remaining <= 0.0:
                     break
                 self._condition.wait(remaining)
-        raise TimeoutError(f"Command {command_index} was not echoed by core1")
+        msg = f"Command {command_index} was not echoed by core1"
+        raise TimeoutError(msg)
 
     def wait_for_state(self, previous_sequence=None, timeout_s=0.05):
         deadline = time.monotonic() + timeout_s
@@ -217,13 +232,16 @@ class MotorUsbController:
             while True:
                 state = self.poll()
                 sequence = state.get("sequence")
-                if state and (previous_sequence is None or sequence != previous_sequence):
+                if state and (
+                    previous_sequence is None or sequence != previous_sequence
+                ):
                     return state
                 remaining = deadline - time.monotonic()
                 if remaining <= 0.0:
                     break
                 self._condition.wait(remaining)
-        raise TimeoutError("No new state packet received")
+        msg = "No new state packet received"
+        raise TimeoutError(msg)
 
     def _read_loop(self):
         while self._rx_running:

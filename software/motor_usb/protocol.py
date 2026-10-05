@@ -1,6 +1,5 @@
-import glob
+import pathlib
 import struct
-
 
 MAGIC0 = 0xA5
 MAGIC1 = 0x5A
@@ -33,18 +32,26 @@ def require_ready(state, motors=BOTH_MOTORS):
         cause = FAULT_CAUSES.get(flags >> 3, "unknown fault code")
         recovery = (
             "Release the button, then hold it again: recovery occurs at 3 seconds. Restart the controller to resume."
-            if flags >> 3 == 9 else "Correct the cause and reset the board."
+            if flags >> 3 == 9
+            else "Correct the cause and reset the board."
         )
+        msg = f"Controller fault: {cause} (flags=0x{flags:02x}). {recovery}"
         raise RuntimeError(
-            f"Controller fault: {cause} (flags=0x{flags:02x}). "
-            f"{recovery}"
+            msg,
         )
     missing = motors & BOTH_MOTORS & ~flags
     if missing:
-        names = ", ".join(name for mask, name in ((M0_READY, "M0"), (M1_READY, "M1")) if missing & mask)
-        raise RuntimeError(
+        names = ", ".join(
+            name
+            for mask, name in ((M0_READY, "M0"), (M1_READY, "M1"))
+            if missing & mask
+        )
+        msg = (
             f"Motors not ready: {names} (flags=0x{flags:02x}). "
             "Check saved calibration and startup hardware checks."
+        )
+        raise RuntimeError(
+            msg,
         )
 
 
@@ -66,12 +73,15 @@ STATE_VALUE_NAMES = (
 
 def default_port():
     ports = sorted(
-        glob.glob("/dev/serial/by-id/*")
-        + glob.glob("/dev/ttyACM*")
-        + glob.glob("/dev/ttyUSB*")
+        [
+            *pathlib.Path("/dev/serial/by-id").glob("*"),
+            *pathlib.Path("/dev").glob("ttyACM*"),
+            *pathlib.Path("/dev").glob("ttyUSB*"),
+        ]
     )
     if not ports:
-        raise SystemExit("No serial port found. Pass --port /dev/ttyACM0")
+        msg = "No serial port found. Pass --port /dev/ttyACM0"
+        raise SystemExit(msg)
     return ports[0]
 
 
@@ -115,7 +125,7 @@ def decode_state(frame_bytes):
         return None
 
     unpacked = STATE_FRAME.unpack(frame_bytes)
-    values = dict(zip(STATE_VALUE_NAMES, unpacked[9:19]))
+    values = dict(zip(STATE_VALUE_NAMES, unpacked[9:19], strict=True))
     values.update(
         sequence=unpacked[5],
         t_us=unpacked[6],

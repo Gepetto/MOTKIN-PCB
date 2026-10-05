@@ -4,7 +4,6 @@ import time
 
 from motor_usb import MotorUsbController
 
-
 RATE_HZ = 50.0
 PERIOD_S = 1.0 / RATE_HZ
 TIMEOUT_MS = 100
@@ -38,22 +37,27 @@ def format_screen(robot):
     )
 
 
-with MotorUsbController(timeout_ms=TIMEOUT_MS) as robot:
-    robot.initialize()
-    next_tick = time.perf_counter()
-    sys.stdout.write(CLEAR_SCREEN)
+def main():
+    with MotorUsbController(timeout_ms=TIMEOUT_MS) as robot:
+        robot.initialize()
+        next_tick = time.perf_counter()
+        sys.stdout.write(CLEAR_SCREEN)
 
-    while True:
-        robot.m0.set(q=robot.m0.q, v=0.0, kp=0.0, kd=0.0, iff=0.0)
-        robot.m1.set(q=robot.m1.q, v=0.0, kp=0.0, kd=0.0, iff=0.0)
-        robot.update()
+        while True:
+            robot.m0.set(q=robot.m0.q, v=0.0, kp=0.0, kd=0.0, iff=0.0)
+            robot.m1.set(q=robot.m1.q, v=0.0, kp=0.0, kd=0.0, iff=0.0)
+            robot.update()
 
-        sys.stdout.write(format_screen(robot))
-        sys.stdout.flush()
+            sys.stdout.write(format_screen(robot))
+            sys.stdout.flush()
 
-        next_tick += PERIOD_S
-        sleep_s = next_tick - time.perf_counter()
-        if sleep_s > 0.0:
-            time.sleep(sleep_s)
-        else:
-            next_tick = time.perf_counter()
+            next_tick += PERIOD_S
+            sleep_s = next_tick - time.perf_counter()
+            if sleep_s > 0.0:
+                time.sleep(sleep_s)
+            else:
+                next_tick = time.perf_counter()
+
+
+if __name__ == "__main__":
+    main()
