@@ -1,21 +1,6 @@
 # Python scripts
 
-Run the scripts directly from the checkout. The project does not need to be
-installed, and the scripts do not modify `sys.path`.
-
-From the repository root:
-
-```sh
-python3 software/demo_sine_position.py
-```
-
-From `firmware/`:
-
-```sh
-python3 ../software/demo_sine_position.py
-```
-
-All demos and tools are in this directory. The shared library is a local package:
+All demos and tools are in this python module.
 
 ```text
 software/
@@ -23,12 +8,12 @@ software/
         __init__.py
         client.py
         protocol.py
-    demo_sine_position.py
-    demo_motor_coupling.py
-    demo_motor_tone.py
-    monitor_zero_torque.py
-    plot_current_step_response.py
-    measure_host_timing.py
+        demo_sine_position.py
+        demo_motor_coupling.py
+        demo_motor_tone.py
+        monitor_zero_torque.py
+        plot_current_step_response.py
+        measure_host_timing.py
 ```
 
 | Script | Purpose |
