@@ -18,7 +18,7 @@ setup(
     packages=find_packages(exclude=["test"]),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + PACKAGE["name"]]),
-        ("share/" + PACKAGE["name"], ["PACKAGE.xml"]),
+        ("share/" + PACKAGE["name"], ["package.xml"]),
     ],
     package_data={"": ["py.typed"]},
     install_requires=["matplotlib", "pyserial", "setuptools"],
