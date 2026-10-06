@@ -1,24 +1,36 @@
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
-package_name = "motkin_pcb"
+ROOT = ET.parse("package.xml").getroot()
+PACKAGE = {
+    k: ROOT.find(k).text
+    for k in ["name", "version", "description", "license", "author", "maintainer"]
+}
+MAILS = {k: ROOT.find(k).get("email") for k in ["author", "maintainer"]}
+README = Path(__file__).parent / "README.md"
+
 
 setup(
-    name="motkin-pcb",
-    version="1.0.0",
+    name=PACKAGE["name"].replace("_", "-"),
+    version=PACKAGE["version"],
     packages=find_packages(exclude=["test"]),
     data_files=[
-        ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
-        ("share/" + package_name, ["package.xml"]),
+        ("share/ament_index/resource_index/packages", ["resource/" + PACKAGE["name"]]),
+        ("share/" + PACKAGE["name"], ["PACKAGE.xml"]),
     ],
     package_data={"": ["py.typed"]},
     install_requires=["matplotlib", "pyserial", "setuptools"],
     zip_safe=True,
-    author="Thomas Flayols",
-    author_email="thomas.flayols@laas.fr",
-    maintainer="Guilhem Saurel",
-    maintainer_email="guilhem.saurel@laas.fr",
-    description="usb driver for pico_dual_PMSM_BU79100G_DRV8316C",
-    license="BSD-2-Clause",
+    author=PACKAGE["author"],
+    author_email=MAILS["author"],
+    maintainer=PACKAGE["maintainer"],
+    maintainer_email=MAILS["maintainer"],
+    description=PACKAGE["description"],
+    long_description=README.read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
+    license=PACKAGE["license"],
     extras_require={
         "test": [
             "pytest",
